@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { Segment, Header, Modal, Button, Image, Form, Checkbox } from 'semantic-ui-react'
-
+import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
 
 
 class NameForm extends Component {
   
   state = {
-    first_name: '',
-    last_name: '',
+    campaignName: '',
+    points: 0,
+    startDate: null,
+    endDate: null,
+    focusedInput: null,
     open: false
   };
 
@@ -18,16 +21,8 @@ class NameForm extends Component {
   handleChange = (event, { name, value }) => this.setState({ [name]: value })
 
   handleSubmit = () => {
-    const { first_name, last_name } = this.state;
-    console.log(this.state)
-    // this.setState(
-    //   {
-    //     submitted_first_name: first_name, 
-    //     submitted_last_name: last_name
-    //   });
-
-    console.log(this.state);
-    const campaign = [ first_name, last_name ];
+    const state = this.state;
+    const campaign = (({ campaignName, points, startDate, endDate }) => ({ campaignName, points, startDate, endDate })) (state);
     console.log(campaign)
     this.props.addCampaignCallback(campaign)
     this.close()
@@ -35,19 +30,19 @@ class NameForm extends Component {
 
   close = () =>  this.setState({ 
     open: false,
-    first_name: '',
-    last_name: ''
+    campaignName: '',
+    points: ''
   });
 
   render() {
-    const { first_name, last_name, submitted_first_name, submitted_last_name } = this.state;
+    const { campaignName, points } = this.state;
     const { open, closeOnEscape, closeOnDimmerClick } = this.state
 
 
     return (
       <div>
         <Button onClick={this.closeConfigShow(false, true)}>
-          Show Modal
+          Create new
         </Button>
         <Modal 
 
@@ -63,19 +58,30 @@ class NameForm extends Component {
             </Modal.Description>
               <Form onSubmit={this.handleSubmit}>
                   <Form.Input
-                    placeholder='First Name'
-                    name='first_name'
-                    value={first_name}
+                    placeholder='Campaign Name'
+                    name='campaignName'
+                    value={campaignName}
                     onChange={this.handleChange}
                   />
                   <Form.Input
-                    placeholder='Last Name'
-                    name='last_name'
-                    value={last_name}
+                    placeholder='Points required'
+                    name='points'
+                    value={points}
                     onChange={this.handleChange}
                   />
-                  <Form.Button type='submit' content='Submit' />
-                  <Button onClick={this.close}>Cancel</Button>
+                  <DateRangePicker
+                    startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                    startDateId="your_unique_startDate_id" // PropTypes.string.isRequired,
+                    endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                    endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                    onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })} // PropTypes.func.isRequired,
+                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([STARTDATE, END_DATE]) or null,
+                    onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+                  />
+                  <div>
+                    <Button type='submit'>Submit</Button>
+                    <Button onClick={this.close}>Cancel</Button>
+                  </div>
               </Form>
           </Modal.Content>
         </Modal>
@@ -90,8 +96,8 @@ function CampaignSegment(props) {
   // fetchCampaigns() {
   //   let campaigns = [
   //     {
-  //       first_name: 'Meow',
-  //       last_name: 'Mow'
+  //       campaignName: 'Meow',
+  //       points: 'Mow'
   //     }
   //   ];
 
@@ -102,8 +108,9 @@ function CampaignSegment(props) {
   console.log(props.campaigns);
   let campaignList = props.campaigns.map(campaign => {
     return (
-      <Segment key={campaign.first_name}>
-        {campaign}
+      <Segment key={campaign.campaignName}>
+        {/* moment object */}
+        {campaign.campaignName} {campaign.points} {campaign.startDate.format("YYYY-MM-DD")} 
       </Segment>
     )
   });
@@ -116,7 +123,6 @@ function CampaignSegment(props) {
       <div>
         {campaignList}
       </div>
-      
     </Segment.Group>
   )
 }
@@ -135,6 +141,7 @@ class Campaigns extends Component {
   }
 
   render() {
+    console.log(this.state.campaigns)
     return (
       <>
 

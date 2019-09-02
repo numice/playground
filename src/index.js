@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'semantic-ui-css/semantic.min.css'
+import 'react-dates/lib/css/_datepicker.css';
+import 'react-dates/initialize';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
