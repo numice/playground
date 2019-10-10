@@ -6,6 +6,9 @@ import * as serviceWorker from './serviceWorker';
 import 'semantic-ui-css/semantic.min.css'
 import 'react-dates/lib/css/_datepicker.css';
 import 'react-dates/initialize';
+import axios from 'axios';
+
+// axios.defaults.baseURL = 'http://localhost:3000';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
