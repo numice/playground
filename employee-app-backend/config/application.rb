@@ -11,6 +11,7 @@ module EmployeeAppBackend
     # Initialize configuration defaults for originally generated Rails version.
     config.api_only = true
     config.debug_exception_response_format = :api
+    config.active_record.schema_format = :sql
     config.load_defaults 6.0
 
     # Settings in config/environments/* take precedence over those specified here.
