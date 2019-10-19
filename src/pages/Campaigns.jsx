@@ -61,18 +61,18 @@ class NameForm extends Component {
   handleSubmit = () => {
     const state = this.state;
 
-    const campaign = (({ campaignName, point, startNow, startDate, endDate }) => {
+    const campaign = (({ campaignName, point, status, startNow, startDate, endDate }) => {
       if (startNow === true) {
         startDate = moment().format('YYYY-MM-DD');
       }
       startDate = startDate.format('YYYY-MM-DD')
       endDate = endDate.format('YYYY-MM-DD')
-      return { campaignName, point, startDate, endDate };
+      return { campaignName, point, status, startDate, endDate };
     }) (state);
     console.log('this is POST to server')
     console.log(campaign);
     //insert POST here
-    axios.post('/api/v1/campaigns', campaign);
+    axios.post('/campaigns', (({ campaignName, point, status, startDate, endDate }) => ({campaignName, point, startDate, endDate})) (campaign));
     this.props.addCampaignCallback(campaign);
     this.close();
   };
@@ -240,7 +240,12 @@ class Campaigns extends Component {
   state = {
     campaigns: []
   }
-
+  async componentDidMount () {
+    let response = await axios.get('/campaigns')
+    this.setState({campaigns: response.data.campaigns})
+    console.log('this is GET')
+    console.log(response.data.campaigns)
+  }
   
 
   addCampaign = (campaign) => {

@@ -3,8 +3,9 @@ class CreateCampaigns < ActiveRecord::Migration[6.0]
     create_table :campaigns do |t|
       t.string :campaignName
       t.integer :point
-      t.string :startDate
-      t.string :endDate
+      t.string :status
+      t.date :startDate
+      t.date :endDate
       t.timestamps
     end
   end
